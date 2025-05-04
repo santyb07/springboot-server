@@ -1,0 +1,77 @@
+package com.tcs.bill.model;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity(name = "Bill_info")
+public class Bill {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int id;
+	private long consumerNumber;
+	private double dueAmount;
+	private double payable;
+	private String userId;
+	public Bill(int id, long consumerNumber, double dueAmount, double payable, String userId) {
+		super();
+		this.id = id;
+		this.consumerNumber = consumerNumber;
+		this.dueAmount = dueAmount;
+		this.payable = payable;
+		this.userId = userId;
+	}
+	public Bill(long consumerNumber, double dueAmount, double payable, String userId) {
+		super();
+		this.consumerNumber = consumerNumber;
+		this.dueAmount = dueAmount;
+		this.payable = payable;
+		this.userId = userId;
+	}
+	public Bill() {
+		super();
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public long getConsumerNumber() {
+		return consumerNumber;
+	}
+	public void setConsumerNumber(long consumerNumber) {
+		this.consumerNumber = consumerNumber;
+	}
+	public double getDueAmount() {
+		return dueAmount;
+	}
+	public void setDueAmount(double dueAmount) {
+		this.dueAmount = dueAmount;
+	}
+	public double getPayable() {
+		return payable;
+	}
+	public void setPayable(double payable) {
+		this.payable = payable;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	@Override
+	public String toString() {
+		return "Bill [id=" + id + ", consumerNumber=" + consumerNumber + ", dueAmount=" + dueAmount + ", payable="
+				+ payable + ", userId=" + userId + "]";
+	}
+	
+//	@Column(name = "Bill Amount", nullable = false)
+//	private int amount;
+	
+	
+}

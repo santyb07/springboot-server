@@ -1,0 +1,101 @@
+package com.tcs.bill.model;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity(name = "Bill_info")
+public class Bill {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int id;
+	private String information;
+	private String userId;
+	
+	@Column(name = "Bill Amount", nullable = false)
+	private int amount;
+	
+	
+	public Bill(String information, String userId, int amount) {
+		super();
+		this.information = information;
+		this.userId = userId;
+		this.amount = amount;
+	}
+
+
+	public Bill() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+
+	public Bill(int id, String information, String userId, int amount) {
+		super();
+		this.id = id;
+		this.information = information;
+		this.userId = userId;
+		this.amount = amount;
+	}
+
+
+
+	public int getId() {
+		return id;
+	}
+
+
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+
+
+	public String getInformation() {
+		return information;
+	}
+
+
+
+	public void setInformation(String information) {
+		this.information = information;
+	}
+
+
+
+	public String getUserId() {
+		return userId;
+	}
+
+
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+
+
+	public int getAmount() {
+		return amount;
+	}
+
+
+
+	public void setAmount(int amount) {
+		this.amount = amount;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return "Bill [id=" + id + ", information=" + information + ", userId=" + userId + ", amount=" + amount + "]";
+	}
+	
+	
+
+}

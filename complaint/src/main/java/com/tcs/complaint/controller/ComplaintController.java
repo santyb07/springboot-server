@@ -1,0 +1,91 @@
+package com.tcs.complaint.controller;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.tcs.complaint.model.Complaint;
+import com.tcs.complaint.service.ComplaintService;
+
+
+@RestController
+public class ComplaintController {
+	
+	Logger logger = LoggerFactory.getLogger(getClass());
+
+	/*
+	 * //create endpoints 1.which type of method =>get 2.what we will return String
+	 * 3. what is the end point=>/get-hello
+	 */
+	@GetMapping("/get-hello")
+	public String sayHello() {
+		return "Hello from the rest controller!!";
+	}
+
+
+	@GetMapping("path/{id}")
+	public String sayHello(@PathVariable("id") Integer id,
+			@RequestParam(value = "sort", required = false) String sort) {
+		return "the id entered is" + id + "in order of" + sort + "order";
+	}
+
+
+	@Autowired
+	private ComplaintService complaintService;
+
+	
+	 @GetMapping("/complaint") public List<Complaint> get()
+	 { return this.complaintService.get(); }
+	 
+	@GetMapping("complaint/{id}")
+	public List<Complaint> get(@PathVariable("id") String id) {
+		return this.complaintService.getUserById(id);
+	}
+	@GetMapping("complaint/req")
+	public Complaint getId(@RequestParam("id") Integer id) {
+		return this.complaintService.get(id);
+	}
+	
+	@PostMapping("/complaint")
+	public Complaint saveBill(@RequestBody Complaint complaint) {
+		logger.debug("{}", complaint);
+		this.complaintService.Save(complaint);
+		return complaint;
+	}
+	
+	@PutMapping("/complaint")
+	public Complaint updateBill(@RequestBody Complaint complaint)throws Exception{
+		logger.debug("{}", complaint);
+		this.complaintService.update(complaint);
+		return complaint;
+	}
+	
+	@DeleteMapping("/bill/{id}")
+	public Complaint deleteBill(@PathVariable("id") Integer id)throws Exception {
+		Complaint complaint = this.complaintService.get(id);
+		this.complaintService.delete(id);
+		return complaint;
+	}
+	
+	@GetMapping("/complaint-userId")
+	public List<Complaint> getUserById(@RequestParam("id") String id){
+		return this.complaintService.getUserById(id);
+	}
+	
+//	@GetMapping("/bill-AmountLessThan")
+//	public List<Bill> getAmountLessThan(@RequestParam("amount") int amount){
+//		return this.billService.getAmount(amount);
+//	}
+
+}
+

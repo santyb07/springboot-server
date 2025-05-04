@@ -1,0 +1,93 @@
+package com.tcs.user.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import com.tcs.user.config.NoUserFoundException;
+import com.tcs.user.model.User;
+import com.tcs.user.model.UserDTO;
+import com.tcs.user.service.UserService;
+
+@RestController
+@CrossOrigin(origins ="http://localhost:4200")
+public class UserController {
+
+	@Autowired
+	private UserService userService;
+	
+	@GetMapping("/user")
+	public List<User> getAlluser(){
+		return this.userService.get();
+		
+	}
+	
+	@GetMapping("/get-hello")
+	public String sayHello() {
+		return "Hello from the rest controller!!";
+	}
+	
+	@GetMapping("/user/{id}")
+	public User getUserById(@PathVariable("id") int id){
+		return this.userService.get(id);
+		
+	}
+	
+	@PostMapping("/user")
+	public User Save(@RequestBody User user) {
+		this.userService.save(user);
+		return user;
+	}
+	
+	//login functionality
+	@PostMapping("/login")
+	public ResponseEntity<?> login(@RequestBody User loginRequest) {
+	    String userId = loginRequest.getUserId();
+	    String password = loginRequest.getPassword();
+
+	    try {
+	        User user = userService.getUserByUserId(userId);
+	        if (user.getPassword().equals(password)) {
+	            return ResponseEntity.ok(user);
+	        } else {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password");
+	        }
+	    } catch (NoUserFoundException e) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid userId");
+	    }
+	}
+
+	
+	@PutMapping("/user")
+	public User update(@RequestBody User user) {
+		this.userService.update(user);
+		return user;
+	}
+	
+	@DeleteMapping("/user/{id}")
+	public User deleteUser(@PathVariable("id") int id) {
+		User user = this.userService.get(id);
+		this.userService.delete(id);
+		return user;
+	}
+	
+	@GetMapping("/user/{id}/bill")
+	public UserDTO getUserBill(@PathVariable("id") int id) {
+		return this.userService.getBill(id);
+	}
+	
+	@GetMapping("/user/bill")
+	public List<UserDTO> getBill() {
+		return this.userService.getBill();
+	}
+}

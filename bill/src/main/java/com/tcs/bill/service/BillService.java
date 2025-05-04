@@ -1,0 +1,97 @@
+package com.tcs.bill.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.tcs.bill.config.NoBillFoundException;
+import com.tcs.bill.model.Bill;
+import com.tcs.bill.repository.BillRepository;
+
+@Service
+public class BillService {
+	
+	@Autowired
+	private BillRepository billRepository;
+	
+	//1. create =>insertion=>save()
+	
+	public void Save(Bill bill) {
+		this.billRepository.save(bill);
+	}
+	
+	//2.read the data
+	//1.read the entire=>findall()
+	public List<Bill> get(){
+		return this.billRepository.findAll();
+	}
+	
+		
+	//2.findById
+	public Bill get(int id) {
+		Optional<Bill> output = this.billRepository.findById(id);
+		try {
+			
+		if(output.isEmpty()) {
+			throw new NoBillFoundException("Please enter the correct id");//throw an exception
+		}
+		}catch(Exception e) {			
+			return null;
+		}
+		return  output.get();
+	}
+//	
+	/*
+	 * //also can be written as public Bill getId(int id) throws Exception { Bill
+	 * output = this.billRepository.findById(id).orElseThrow(()-> new
+	 * Exception("Please give the correct id"));
+	 * 
+	 * return output; }
+	 */
+	
+	//3.update => save
+	
+	public void update(Bill bill) {
+		if(get(bill.getId())==null) {
+			return;
+		}
+		this.billRepository.save(bill);
+	}
+	
+	//4.delete =>delete()
+	
+	public void delete(int id) {
+		Bill bill = get(id);
+		if(bill == null) {
+			return;
+		}
+		
+		this.billRepository.delete(bill);
+	}
+	
+	public List<Bill> getUserById(String id){
+		return this.billRepository.findByUserId(id);
+	}
+//	
+//	public List<Bill> getAmount(int amount){
+//		return this.billRepository.findByAmountLessThan(amount);
+//	}
+	
+	/*
+	 * private static List<Bill> bills = new ArrayList<Bill>();
+	 * 
+	 * static { BillService.bills.add(new Bill(1,"Bill1","101",1300));
+	 * BillService.bills.add(new Bill(2,"Bill2","102",1500));
+	 * BillService.bills.add(new Bill(3,"Bill3","103",1200)); }
+	 * 
+	 * public List<Bill> get(){ return BillService.bills; }
+	 * 
+	 * public Bill get(int id) { Bill output =
+	 * BillService.bills.stream().filter((data) -> data.getId()==
+	 * id).findAny().get(); return output; }
+	 */
+
+}

@@ -1,0 +1,102 @@
+package com.tcs.bill.controller;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.tcs.bill.model.Bill;
+import com.tcs.bill.service.BillService;
+
+
+@RestController
+public class BillController {
+	
+	Logger logger = LoggerFactory.getLogger(getClass());
+
+	/*
+	 * //create endpoints 1.which type of method =>get 2.what we will return String
+	 * 3. what is the end point=>/get-hello
+	 */
+	@GetMapping("/get-hello")
+	public String sayHello() {
+		return "Hello from the rest controller!!";
+	}
+
+	/*
+	 * How to pass the info in to ways 1. PathVariable 2.RequesParam
+	 */
+	/*
+	 * @GetMapping("path/{id}") public String sayHello(@PathVariable("id") Integer
+	 * id) { return "the id entered is" + id; }
+	 */
+
+	@GetMapping("path/{id}")
+	public String sayHello(@PathVariable("id") Integer id,
+			@RequestParam(value = "sort", required = false) String sort) {
+		return "the id entered is" + id + "in order of" + sort + "order";
+	}
+
+	@GetMapping("/demo-bill")
+	public Bill getDemoBill() {
+		return new Bill(1, "Demo  bill1", "user1", 15000);
+	}
+
+	@Autowired
+	private BillService billService;
+
+	
+	 @GetMapping("/bill") public List<Bill> get()
+	 { return this.billService.get(); }
+	 
+	@GetMapping("bill/{id}")
+	public List<Bill> get(@PathVariable("id") String id) {
+		return this.billService.getUserById(id);
+	}
+	
+	@GetMapping("bill/req")
+	public Bill getId(@RequestParam("id") Integer id) {
+		return this.billService.get(id);
+	}
+	
+	@PostMapping("/bill")
+	public Bill saveBill(@RequestBody Bill bill) {
+		logger.debug("{}", bill);
+		this.billService.Save(bill);
+		return bill;
+	}
+	
+	@PutMapping("/bill")
+	public Bill updateBill(@RequestBody Bill bill)throws Exception{
+		logger.debug("{}", bill);
+		this.billService.update(bill);
+		return bill;
+	}
+	
+	@DeleteMapping("/bill/{id}")
+	public Bill deleteBill(@PathVariable("id") Integer id)throws Exception {
+		Bill bill = this.billService.get(id);
+		this.billService.delete(id);
+		return bill;
+	}
+	
+	@GetMapping("/bill-userId")
+	public List<Bill> getUserById(@RequestParam("id") String id){
+		return this.billService.getUserById(id);
+	}
+	
+	@GetMapping("/bill-AmountLessThan")
+	public List<Bill> getAmountLessThan(@RequestParam("amount") int amount){
+		return this.billService.getAmount(amount);
+	}
+
+}

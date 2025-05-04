@@ -1,0 +1,141 @@
+package com.tcs.user.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.tcs.user.config.NoUserFoundException;
+import com.tcs.user.model.Bill;
+import com.tcs.user.model.User;
+import com.tcs.user.model.UserDTO;
+import com.tcs.user.repository.UserRepository;
+
+@Service
+public class UserService {
+	
+	Logger logger = LoggerFactory.getLogger(getClass());
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private BillService billService;
+	
+	//create=>save
+	
+	public void save(User user) {
+		this.userRepository.save(user);
+	}
+	
+	// Find user by userId (for login functionality)
+	public User getUserByUserId(String userId) {
+	    return this.userRepository.findByUserId(userId)
+	            .orElseThrow(() -> new NoUserFoundException("No user found with userId: " + userId));
+	}
+	
+	//read1.finall
+	public List<User> get(){
+		return this.userRepository.findAll();
+	}
+	
+	//2.findById
+		public User get(int id) {
+			return this.userRepository.findById(id).orElseThrow(()->new NoUserFoundException("Please chech the user id"));
+		}
+		
+		
+//		//thie method will return bills based on specic userid
+//		public User getBill(int id) {
+//			User user = this.userRepository.findById(id).orElseThrow(()->new NoUserFoundException("Please chech the user id"));
+//			// Bill => <> Bill 
+//			Bill bills = this.billService.getUserById(user.getId());
+//			logger.debug("Bill details: {}",bills);
+//			return user;
+//		}
+		
+		
+		
+		//3.update => save
+		
+		public void update(User user) {
+			if(get(user.getId())==null) {
+				return;
+			}
+			this.userRepository.save(user);
+		}
+		
+		//4.delete =>delete()
+		
+		public void delete(int id) {
+			User user = get(id);
+			if(user == null) {
+				return;
+			}
+			
+			this.userRepository.delete(user);
+		}
+		
+		//to get the bill info for a specif user id
+		public UserDTO getBill(String id) {
+			User user = getUserByUserId(id);
+			List<Bill> bills = this.billService.getUserById(user.getUserId());
+			logger.debug("Bill details:{}",bills);
+			UserDTO userDTO = mapper(user);
+			userDTO.setBills(bills);
+			
+			return userDTO;
+			
+		}
+		
+		//retrive the bill for all user with bill info
+		public List<UserDTO> getBill(){
+			List<UserDTO> userDTOs = new ArrayList<UserDTO>();
+			List<User> users = get();
+			
+			for(User user:users) {
+				List<Bill> bills = this.billService.getUserById(user.getUserId());
+				UserDTO userDTO = mapper(user);
+				userDTO.setBills(bills);
+				
+				userDTOs.add(userDTO);
+			}
+			
+			return userDTOs;
+			
+		}
+//		private long consumerNumber;
+//		private int billNumber;
+//		private String title;
+//		private String name;
+//		private String email;
+//		private long mobile;
+//		private String userId;
+//		private String password;
+//		private String confirmPassword;
+		
+		
+		private UserDTO mapper(User user) {
+			UserDTO userDTO = new UserDTO();
+			
+			userDTO.setId(user.getId());
+			userDTO.setConsumerNumber(user.getConsumerNumber());
+			userDTO.setBillNumber(user.getBillNumber());
+			userDTO.setTitle(user.getTitle());
+			userDTO.setName(user.getName());
+			userDTO.setEmail(user.getEmail());
+			userDTO.setMobile(user.getMobile());
+			userDTO.setUserId(user.getUserId());
+			userDTO.setPassword(user.getPassword());
+			userDTO.setConfirmPassword(user.getConfirmPassword());
+			return userDTO;
+			
+		}
+	
+	
+
+}
