@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<qualifiedTypeNameHistroy/>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="com.tcs.complaint.repository.ComplaintRepository"/>
+    <fullyQualifiedTypeName name="com.tcs.complaint.model.Complaint"/>
+    <fullyQualifiedTypeName name="com.tcs.complaint.config.NoComplaintFoundException"/>
+    <fullyQualifiedTypeName name="com.tcs.user.model.Complaint"/>
+</qualifiedTypeNameHistroy>

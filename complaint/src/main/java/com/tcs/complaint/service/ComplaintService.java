@@ -33,7 +33,7 @@ public class ComplaintService {
 		
 	//2.findById
 	public Complaint get(int id) {
-		Optional<Complaint> output = this.complaintRepository.findById(id);
+		Optional<Complaint> output = this.complaintRepository.findByComplaintId(id);
 		try {
 			
 		if(output.isEmpty()) {

@@ -33,11 +33,11 @@ public class ComplaintController {
 	}
 
 
-	@GetMapping("path/{id}")
-	public String sayHello(@PathVariable("id") Integer id,
-			@RequestParam(value = "sort", required = false) String sort) {
-		return "the id entered is" + id + "in order of" + sort + "order";
-	}
+//	@GetMapping("path/{id}")
+//	public String sayHello(@PathVariable("id") Integer id,
+//			@RequestParam(value = "sort", required = false) String sort) {
+//		return "the id entered is" + id + "in order of" + sort + "order";
+//	}
 
 
 	@Autowired
@@ -47,10 +47,21 @@ public class ComplaintController {
 	 @GetMapping("/complaint") public List<Complaint> get()
 	 { return this.complaintService.get(); }
 	 
+//	@GetMapping("complaint/{id}")
+//	public List<Complaint> get(@PathVariable("id") String id) {
+//		return this.complaintService.getUserById(id);
+//	}
 	@GetMapping("complaint/{id}")
-	public List<Complaint> get(@PathVariable("id") String id) {
-		return this.complaintService.getUserById(id);
+	public Complaint get(@PathVariable("id") int id) {
+		return this.complaintService.get(id);
 	}
+//	   @GetMapping("/complaint-userId/{id}")
+//	    public Complaint get(@PathVariable("id") int id) {
+//			return this.complaintService.get(id);
+//		}
+//		
+	
+	
 	@GetMapping("complaint/req")
 	public Complaint getId(@RequestParam("id") Integer id) {
 		return this.complaintService.get(id);
@@ -77,10 +88,15 @@ public class ComplaintController {
 		return complaint;
 	}
 	
-	@GetMapping("/complaint-userId")
-	public List<Complaint> getUserById(@RequestParam("id") String id){
+	@GetMapping("/complaint-userId/{id}")
+	public List<Complaint> getUserById(@PathVariable("id") String id){
 		return this.complaintService.getUserById(id);
 	}
+	
+//	@GetMapping("/complaint-userId/{id}")
+//	public List<Complaint> getUserById2(@RequestParam("id") String id){
+//		return this.complaintService.getUserById(id);
+//	}
 	
 //	@GetMapping("/bill-AmountLessThan")
 //	public List<Bill> getAmountLessThan(@RequestParam("amount") int amount){
